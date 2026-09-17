@@ -1,0 +1,29 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Jira Tweaks mock</title>
+<link rel="stylesheet" href="../content.css">
+<style>body{font-family:-apple-system,sans-serif;padding:24px;color:#172b4d} .panel{width:420px;border:1px solid #dfe1e6;padding:16px} .row{display:flex;gap:16px;padding:6px 0} .row .lbl{width:120px;color:#6b778c} #log{margin-top:24px;white-space:pre;font:12px monospace;background:#f4f5f7;padding:8px}</style>
+</head><body>
+<div class="panel">
+  <nav><a href="/browse/ABC-123">ABC-123</a></nav>
+  <h2>Fix the widget</h2>
+  <div class="row"><div class="lbl">Assignee</div><div><button>Unassigned</button></div></div>
+  <div class="row"><div class="lbl">Due date</div><div id="cloud-val">Sep 17, 2026</div></div>
+  <dl>
+    <dt>Due Date</dt><dd id="dc-val">17/Sep/26</dd>
+    <dt>Created</dt><dd>Sep 1, 2026</dd>
+  </dl>
+  <div class="row"><div class="lbl">Due date</div><div><button>Already editable</button></div></div>
+</div>
+<div id="log"></div>
+<script>
+  // Mock the Jira REST API and record calls.
+  const log = (m) => { document.getElementById('log').textContent += m + '\n'; };
+  window.fetch = async (url, opts = {}) => {
+    log(`${opts.method || 'GET'} ${url} ${opts.body || ''}`);
+    if ((opts.method || 'GET') === 'GET') return new Response(JSON.stringify({ fields: { duedate: '2026-09-17' } }), { status: 200 });
+    if (JSON.parse(opts.body).fields.duedate === '1999-01-01') return new Response(JSON.stringify({ errorMessages: [], errors: { duedate: 'Field cannot be set.' } }), { status: 400 });
+    return new Response(null, { status: 204 });
+  };
+</script>
+<script src="../content.js"></script>
+</body></html>
