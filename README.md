@@ -49,9 +49,9 @@ So on an `EXT` issue the extension searches your board for that key and renders 
 itself, right under **Parent**:
 
 ```
-Parent        EXT-4000  Client epic
-Caxy ticket   INT-812   Rework the widget pipeline
-Status        In Progress
+Parent            EXT-4000  Client epic
+Internal ticket   INT-812   Rework the widget pipeline
+Status            In Progress
 ```
 
 Open the extension's **Options** to set it up:
@@ -60,7 +60,7 @@ Open the extension's **Options** to set it up:
 | --- | --- | --- |
 | Your Jira site | `https://yourco.atlassian.net` | The site holding your internal projects. One site for all mappings. |
 | Project mappings | `EXT` -> `INT` | One of your projects per client project - see below. |
-| Row label | `Caxy ticket` | Text shown in place of "Parent" on the row. |
+| Row label | `Internal ticket` | Text shown in place of "Parent" on the row. |
 
 ### Project mappings
 

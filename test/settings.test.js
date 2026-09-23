@@ -41,6 +41,7 @@ eq('bare host gains https', JT.normalize({ internalSite: 'yourco.atlassian.net' 
 eq('path and query dropped', JT.normalize({ internalSite: 'https://yourco.atlassian.net/jira/x?y=1' }).internalSite,
   'https://yourco.atlassian.net');
 eq('unparseable site', JT.normalize({ internalSite: '::::' }).internalSite, '');
+// The shipped default, deliberately not a generic placeholder.
 eq('default label', JT.normalize({}).fieldLabel, 'Caxy ticket');
 
 console.log('internalFor');
