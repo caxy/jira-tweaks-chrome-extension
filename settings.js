@@ -9,7 +9,7 @@
 (() => {
   const DEFAULTS = {
     internalSite: '',
-    mappings: [], // [{ client: 'PLS', internal: 'WC4' }] - one of ours per client project
+    mappings: [], // [{ client: 'EXT', internal: 'INT' }] - one of ours per client project
     fieldLabel: 'Caxy ticket'
   };
 
@@ -76,8 +76,8 @@
     return hit ? hit.internal : '';
   }
 
-  // Jira tokenizes "PLS-4567/Rework..." on the punctuation, so an unquoted `~`
-  // match would also hit PLS-45670. Search the exact phrase.
+  // Jira tokenizes "EXT-4567/Rework..." on the punctuation, so an unquoted `~`
+  // match would also hit EXT-45670. Search the exact phrase.
   function buildJql(project, clientKey) {
     const phrase = '"\\"' + clientKey + '\\""';
     return `project = "${project}" AND summary ~ ${phrase} ORDER BY created DESC`;

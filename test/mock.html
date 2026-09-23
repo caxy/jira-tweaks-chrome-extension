@@ -12,11 +12,11 @@ h3{font-size:12px;text-transform:uppercase;color:#6b778c;margin:20px 0 4px}
 </style>
 </head><body>
 <p class="nav">
-  Load as: <a href="?selectedIssue=PLS-4567">PLS-4567 &rarr; WC4</a> &middot;
-  <a href="?selectedIssue=ACME-77">ACME-77 &rarr; WC5</a> &middot;
-  <a href="?selectedIssue=PLS-9999">PLS-9999 (no match)</a> &middot;
-  <a href="?selectedIssue=PLS-4567&amp;fail=auth">PLS-4567 (lookup fails)</a> &middot;
-  <a href="?selectedIssue=WC4-100">WC4-100 (unmapped)</a>
+  Load as: <a href="?selectedIssue=EXT-4567">EXT-4567 &rarr; INT</a> &middot;
+  <a href="?selectedIssue=EXT2-77">EXT2-77 &rarr; INT2</a> &middot;
+  <a href="?selectedIssue=EXT-9999">EXT-9999 (no match)</a> &middot;
+  <a href="?selectedIssue=EXT-4567&amp;fail=auth">EXT-4567 (lookup fails)</a> &middot;
+  <a href="?selectedIssue=INT-100">INT-100 (unmapped)</a>
 </p>
 <div class="panel">
   <nav><a href="/browse/ABC-123">ABC-123</a></nav>
@@ -30,7 +30,7 @@ h3{font-size:12px;text-transform:uppercase;color:#6b778c;margin:20px 0 4px}
   <div class="row"><div class="lbl">Due date</div><div><button>Already editable</button></div></div>
 
   <h3>Details</h3>
-  <div class="row"><div class="lbl">Parent</div><div class="val"><a href="/browse/PLS-4000">PLS-4000</a> Client epic</div></div>
+  <div class="row"><div class="lbl">Parent</div><div class="val"><a href="/browse/EXT-4000">EXT-4000</a> Client epic</div></div>
   <div class="row"><div class="lbl">Status</div><div class="val">In Progress</div></div>
 </div>
 <div id="log"></div>
@@ -42,8 +42,8 @@ h3{font-size:12px;text-transform:uppercase;color:#6b778c;margin:20px 0 4px}
   window.jiraTweaksSettings = {
     internalSite: 'https://example.atlassian.net',
     mappings: [
-      { client: 'PLS', internal: 'WC4' },
-      { client: 'ACME', internal: 'WC5' }
+      { client: 'EXT', internal: 'INT' },
+      { client: 'EXT2', internal: 'INT2' }
     ],
     fieldLabel: 'Caxy ticket'
   };
@@ -51,8 +51,8 @@ h3{font-size:12px;text-transform:uppercase;color:#6b778c;margin:20px 0 4px}
   // Stands in for the service worker: resolves the mapping the same way, then
   // answers from a tiny fixture keyed by client project.
   const FIXTURES = {
-    'PLS-4567': { key: 'WC4-812', summary: 'PLS-4567/Rework the widget pipeline' },
-    'ACME-77': { key: 'WC5-19', summary: 'ACME-77/Port the importer' }
+    'EXT-4567': { key: 'INT-812', summary: 'EXT-4567/Rework the widget pipeline' },
+    'EXT2-77': { key: 'INT2-19', summary: 'EXT2-77/Port the importer' }
   };
   window.jiraTweaksLookup = async (clientKey) => {
     const settings = window.JiraTweaks.normalize(window.jiraTweaksSettings);

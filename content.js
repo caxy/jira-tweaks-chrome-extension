@@ -331,7 +331,7 @@
   // ---------- back-link to our own board ----------
   //
   // Our internal tickets carry the client key at the front of the summary:
-  // "PLS-4567/Some description". Automation links our board to the client's,
+  // "EXT-4567/Some description". Automation links our board to the client's,
   // but not the other way, so on a client issue we render that missing row
   // ourselves: a link to the matching internal ticket, under Parent.
   //

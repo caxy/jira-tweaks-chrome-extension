@@ -18,24 +18,24 @@ function eq(label, got, want) {
 
 console.log('0.2 -> 0.3 migration');
 eq('one client project',
-  JT.normalize({ internalProject: 'wc4', clientProjects: 'pls' }).mappings,
-  [{ client: 'PLS', internal: 'WC4' }]);
+  JT.normalize({ internalProject: 'int', clientProjects: 'ext' }).mappings,
+  [{ client: 'EXT', internal: 'INT' }]);
 eq('several client projects share one of ours',
-  JT.normalize({ internalProject: 'WC4', clientProjects: 'PLS, ACME' }).mappings,
-  [{ client: 'PLS', internal: 'WC4' }, { client: 'ACME', internal: 'WC4' }]);
+  JT.normalize({ internalProject: 'INT', clientProjects: 'EXT, EXT2' }).mappings,
+  [{ client: 'EXT', internal: 'INT' }, { client: 'EXT2', internal: 'INT' }]);
 eq('a real mapping table wins over the legacy fields',
-  JT.normalize({ mappings: [{ client: 'PLS', internal: 'WC9' }], internalProject: 'WC4', clientProjects: 'PLS' }).mappings,
-  [{ client: 'PLS', internal: 'WC9' }]);
+  JT.normalize({ mappings: [{ client: 'EXT', internal: 'INT9' }], internalProject: 'INT', clientProjects: 'EXT' }).mappings,
+  [{ client: 'EXT', internal: 'INT9' }]);
 eq('legacy internal project with no clients',
-  JT.normalize({ internalProject: 'WC4' }).mappings, []);
+  JT.normalize({ internalProject: 'INT' }).mappings, []);
 
 console.log('normalize');
 eq('keys upper-cased, incomplete rows dropped',
-  JT.normalize({ mappings: [{ client: ' pls ', internal: 'wc4' }, { client: '', internal: 'WC5' }] }).mappings,
-  [{ client: 'PLS', internal: 'WC4' }]);
+  JT.normalize({ mappings: [{ client: ' ext ', internal: 'int' }, { client: '', internal: 'INT2' }] }).mappings,
+  [{ client: 'EXT', internal: 'INT' }]);
 eq('a client project maps once - first wins',
-  JT.normalize({ mappings: [{ client: 'PLS', internal: 'WC4' }, { client: 'PLS', internal: 'WC9' }] }).mappings,
-  [{ client: 'PLS', internal: 'WC4' }]);
+  JT.normalize({ mappings: [{ client: 'EXT', internal: 'INT' }, { client: 'EXT', internal: 'INT9' }] }).mappings,
+  [{ client: 'EXT', internal: 'INT' }]);
 eq('bare host gains https', JT.normalize({ internalSite: 'yourco.atlassian.net' }).internalSite,
   'https://yourco.atlassian.net');
 eq('path and query dropped', JT.normalize({ internalSite: 'https://yourco.atlassian.net/jira/x?y=1' }).internalSite,
@@ -44,16 +44,16 @@ eq('unparseable site', JT.normalize({ internalSite: '::::' }).internalSite, '');
 eq('default label', JT.normalize({}).fieldLabel, 'Caxy ticket');
 
 console.log('internalFor');
-const s = JT.normalize({ mappings: [{ client: 'PLS', internal: 'WC4' }, { client: 'ACME', internal: 'WC5' }] });
-eq('PLS -> WC4', JT.internalFor(s, 'PLS-4567'), 'WC4');
-eq('ACME -> WC5', JT.internalFor(s, 'ACME-77'), 'WC5');
-eq('lower-case issue key', JT.internalFor(s, 'acme-77'), 'WC5');
-eq('unmapped project', JT.internalFor(s, 'WC4-100'), '');
+const s = JT.normalize({ mappings: [{ client: 'EXT', internal: 'INT' }, { client: 'EXT2', internal: 'INT2' }] });
+eq('EXT -> INT', JT.internalFor(s, 'EXT-4567'), 'INT');
+eq('EXT2 -> INT2', JT.internalFor(s, 'EXT2-77'), 'INT2');
+eq('lower-case issue key', JT.internalFor(s, 'ext2-77'), 'INT2');
+eq('unmapped project', JT.internalFor(s, 'INT-100'), '');
 eq('not an issue key', JT.internalFor(s, 'nonsense'), '');
 
 console.log('jql');
-eq('client key searched as an exact phrase', JT.buildJql('WC4', 'PLS-4567'),
-  'project = "WC4" AND summary ~ "\\"PLS-4567\\"" ORDER BY created DESC');
+eq('client key searched as an exact phrase', JT.buildJql('INT', 'EXT-4567'),
+  'project = "INT" AND summary ~ "\\"EXT-4567\\"" ORDER BY created DESC');
 
 console.log(fails ? `\n${fails} test(s) FAILED` : '\nall passed');
 process.exit(fails ? 1 : 0);

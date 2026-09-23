@@ -37,20 +37,20 @@ renders its own inline editor (the modern issue view), the extension leaves the 
 
 ## Use: back-link to your own board
 
-Two boards on two Atlassian sites: yours (say `WC4`) and the client's (`PLS`). Automation on your
-side can link a `WC4` ticket to its `PLS` counterpart, but the client's site can't link back. The
+Two boards on two Atlassian sites: yours (say `INT`) and the client's (`EXT`). Automation on your
+side can link an `INT` ticket to its `EXT` counterpart, but the client's site can't link back. The
 link does exist in the data, though - your ticket summaries start with the client key:
 
 ```
-WC4-812   PLS-4567/Rework the widget pipeline
+INT-812   EXT-4567/Rework the widget pipeline
 ```
 
-So on a `PLS` issue the extension searches your board for that key and renders the missing row
+So on an `EXT` issue the extension searches your board for that key and renders the missing row
 itself, right under **Parent**:
 
 ```
-Parent        PLS-4000  Client epic
-Caxy ticket   WC4-812   Rework the widget pipeline
+Parent        EXT-4000  Client epic
+Caxy ticket   INT-812   Rework the widget pipeline
 Status        In Progress
 ```
 
@@ -59,7 +59,7 @@ Open the extension's **Options** to set it up:
 | Field | Example | What it does |
 | --- | --- | --- |
 | Your Jira site | `https://yourco.atlassian.net` | The site holding your internal projects. One site for all mappings. |
-| Project mappings | `PLS` -> `WC4` | One of your projects per client project - see below. |
+| Project mappings | `EXT` -> `INT` | One of your projects per client project - see below. |
 | Row label | `Caxy ticket` | Text shown in place of "Parent" on the row. |
 
 ### Project mappings
@@ -68,11 +68,11 @@ Each client project maps to exactly one of yours:
 
 | Client project | Your project |
 | --- | --- |
-| `PLS` | `WC4` |
-| `ACME` | `WC5` |
+| `EXT` | `INT` |
+| `EXT2` | `INT2` |
 
 The row appears only on issues in a client project listed here, and searches the project it maps to -
-a `PLS` issue looks in `WC4`, an `ACME` issue looks in `WC5`. Your own board is never in the left
+an `EXT` issue looks in `INT`, an `EXT2` issue looks in `INT2`. Your own board is never in the left
 column, so the row never appears there. Two client projects may point at the same project of yours;
 a client project can't be listed twice.
 
@@ -85,11 +85,10 @@ why a row is empty.
 
 ### How the match works
 
-For a `PLS-4567` issue the service worker resolves the mapping (`PLS` -> `WC4`), then runs
-`project = "WC4" AND summary ~ "\"PLS-4567\""` against your site, then
-keeps only a result whose summary actually starts with the client key. The quoting matters: Jira
-tokenizes `PLS-4567/Rework...` on the punctuation, so an unquoted `~` match would also hit
-`PLS-45670`.
+For an `EXT-4567` issue the service worker resolves the mapping (`EXT` -> `INT`), runs
+`project = "INT" AND summary ~ "\"EXT-4567\""` against your site, then keeps only a result whose
+summary actually starts with the client key. The quoting matters: Jira tokenizes
+`EXT-4567/Rework...` on the punctuation, so an unquoted `~` match would also hit `EXT-45670`.
 
 If the lookup can't run - you're not signed in to your site in this browser, or it isn't configured -
 the row degrades to a link that opens that same JQL in your site's issue navigator, rather than
@@ -122,8 +121,8 @@ elements it enhances or skips. For the service worker, run
 
 `test/mock.html` is a stand-alone page with a fake REST API and a fake back-link lookup, for trying
 the UI without a real Jira. Serve the folder (`python3 -m http.server 8765`) and open
-`test/mock.html?selectedIssue=PLS-4567`; the links at the top switch between two mappings
-(`PLS`->`WC4`, `ACME`->`WC5`) and the no-match, lookup-failed and unmapped cases.
+`test/mock.html?selectedIssue=EXT-4567`; the links at the top switch between two mappings
+(`EXT`->`INT`, `EXT2`->`INT2`) and the no-match, lookup-failed and unmapped cases.
 
 `node test/settings.test.js` covers the settings parsing, the 0.2 migration and the JQL quoting.
 

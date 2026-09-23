@@ -43,7 +43,7 @@ function addRow(client, internal) {
     if (!$('mappings').children.length) addRow();
   });
 
-  row.append(mk('map-client', 'PLS', client), arrow, mk('map-internal', 'WC4', internal), remove);
+  row.append(mk('map-client', 'EXT', client), arrow, mk('map-internal', 'INT', internal), remove);
   $('mappings').appendChild(row);
   return row;
 }
@@ -156,7 +156,7 @@ function runTest() {
   const key = $('testKey').value.trim().toUpperCase();
   const out = $('testOut');
   out.hidden = false;
-  if (!JT.ISSUE_KEY_RE.test(key)) { out.textContent = 'Enter an issue key like PLS-4567.'; return; }
+  if (!JT.ISSUE_KEY_RE.test(key)) { out.textContent = 'Enter an issue key like EXT-4567.'; return; }
   out.textContent = 'Searching…';
   chrome.runtime.sendMessage({ type: 'jt:lookup', clientKey: key, fresh: true }, res => {
     if (chrome.runtime.lastError) { out.textContent = chrome.runtime.lastError.message; return; }
