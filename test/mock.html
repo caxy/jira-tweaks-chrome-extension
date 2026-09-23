@@ -1,8 +1,23 @@
 <!doctype html>
 <html><head><meta charset="utf-8"><title>Jira Tweaks mock</title>
 <link rel="stylesheet" href="../content.css">
-<style>body{font-family:-apple-system,sans-serif;padding:24px;color:#172b4d} .panel{width:420px;border:1px solid #dfe1e6;padding:16px} .row{display:flex;gap:16px;padding:6px 0} .row .lbl{width:120px;color:#6b778c} #log{margin-top:24px;white-space:pre;font:12px monospace;background:#f4f5f7;padding:8px}</style>
+<style>
+body{font-family:-apple-system,sans-serif;padding:24px;color:#172b4d}
+.panel{width:460px;border:1px solid #dfe1e6;padding:16px}
+.row{display:flex;gap:16px;padding:6px 0}
+.row .lbl{width:120px;color:#6b778c;flex:none}
+h3{font-size:12px;text-transform:uppercase;color:#6b778c;margin:20px 0 4px}
+#log{margin-top:24px;white-space:pre;font:12px monospace;background:#f4f5f7;padding:8px}
+.nav{margin-bottom:16px;font:13px monospace}
+</style>
 </head><body>
+<p class="nav">
+  Load as: <a href="?selectedIssue=PLS-4567">PLS-4567 &rarr; WC4</a> &middot;
+  <a href="?selectedIssue=ACME-77">ACME-77 &rarr; WC5</a> &middot;
+  <a href="?selectedIssue=PLS-9999">PLS-9999 (no match)</a> &middot;
+  <a href="?selectedIssue=PLS-4567&amp;fail=auth">PLS-4567 (lookup fails)</a> &middot;
+  <a href="?selectedIssue=WC4-100">WC4-100 (unmapped)</a>
+</p>
 <div class="panel">
   <nav><a href="/browse/ABC-123">ABC-123</a></nav>
   <h2>Fix the widget</h2>
@@ -13,11 +28,51 @@
     <dt>Created</dt><dd>Sep 1, 2026</dd>
   </dl>
   <div class="row"><div class="lbl">Due date</div><div><button>Already editable</button></div></div>
+
+  <h3>Details</h3>
+  <div class="row"><div class="lbl">Parent</div><div class="val"><a href="/browse/PLS-4000">PLS-4000</a> Client epic</div></div>
+  <div class="row"><div class="lbl">Status</div><div class="val">In Progress</div></div>
 </div>
 <div id="log"></div>
 <script>
-  // Mock the Jira REST API and record calls.
   const log = (m) => { document.getElementById('log').textContent += m + '\n'; };
+  const params = new URLSearchParams(location.search);
+
+  // Stand in for chrome.storage.sync / the background service worker.
+  window.jiraTweaksSettings = {
+    internalSite: 'https://example.atlassian.net',
+    mappings: [
+      { client: 'PLS', internal: 'WC4' },
+      { client: 'ACME', internal: 'WC5' }
+    ],
+    fieldLabel: 'Caxy ticket'
+  };
+
+  // Stands in for the service worker: resolves the mapping the same way, then
+  // answers from a tiny fixture keyed by client project.
+  const FIXTURES = {
+    'PLS-4567': { key: 'WC4-812', summary: 'PLS-4567/Rework the widget pipeline' },
+    'ACME-77': { key: 'WC5-19', summary: 'ACME-77/Port the importer' }
+  };
+  window.jiraTweaksLookup = async (clientKey) => {
+    const settings = window.JiraTweaks.normalize(window.jiraTweaksSettings);
+    const project = window.JiraTweaks.internalFor(settings, clientKey);
+    log(`lookup ${clientKey} -> ${project || '(unmapped)'}`);
+    const searchUrl = window.JiraTweaks.searchUrl(settings.internalSite, project, clientKey);
+    if (params.get('fail')) return { ok: false, code: 'auth', project, error: 'Not signed in (HTTP 401).', searchUrl };
+    const hit = FIXTURES[clientKey];
+    if (!hit) return { ok: false, code: 'notfound', project, searchUrl };
+    return {
+      ok: true,
+      key: hit.key,
+      project,
+      summary: hit.summary,
+      url: `https://example.atlassian.net/browse/${hit.key}`,
+      searchUrl
+    };
+  };
+
+  // Mock the Jira REST API used by the due-date editor and record calls.
   window.fetch = async (url, opts = {}) => {
     log(`${opts.method || 'GET'} ${url} ${opts.body || ''}`);
     if ((opts.method || 'GET') === 'GET') return new Response(JSON.stringify({ fields: { duedate: '2026-09-17' } }), { status: 200 });
@@ -25,5 +80,6 @@
     return new Response(null, { status: 204 });
   };
 </script>
+<script src="../settings.js"></script>
 <script src="../content.js"></script>
 </body></html>

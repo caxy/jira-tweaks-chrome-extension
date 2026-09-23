@@ -1,0 +1,103 @@
+:root { color-scheme: light dark; }
+body {
+  margin: 0 auto;
+  padding: 28px 24px 48px;
+  max-width: 620px;
+  font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #172b4d;
+  background: #fff;
+}
+h1 { font-size: 20px; margin: 0 0 4px; }
+h2 { font-size: 14px; margin: 0 0 6px; }
+.intro { margin: 0 0 24px; color: #5e6c84; }
+code { font: 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace; background: rgba(9,30,66,.06); padding: 1px 4px; border-radius: 3px; }
+
+form label { display: block; margin-bottom: 18px; }
+.lbl { display: block; font-weight: 600; margin-bottom: 4px; }
+.hint { display: block; margin-top: 4px; font-size: 12px; color: #6b778c; }
+
+input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  padding: 7px 9px;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  background: #fafbfc;
+  color: inherit;
+}
+input[type="text"]:focus { outline: none; border-color: #4c9aff; background: #fff; }
+
+button {
+  font: inherit;
+  font-size: 13px;
+  padding: 7px 14px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  background: rgba(9,30,66,.08);
+  color: #42526e;
+}
+button:hover { background: rgba(9,30,66,.14); }
+button.primary { background: #0052cc; color: #fff; }
+button.primary:hover { background: #0747a6; }
+
+.actions { display: flex; align-items: center; gap: 12px; }
+.status { font-size: 13px; color: #00875a; }
+.status.error { color: #de350b; }
+
+.card { margin-top: 28px; padding: 16px; border: 1px solid #dfe1e6; border-radius: 4px; }
+.card p { margin: 0 0 10px; color: #5e6c84; }
+.row { display: flex; gap: 8px; }
+.row input { flex: 1; }
+.out { margin: 12px 0 0; padding: 10px; font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap; word-break: break-word; background: rgba(9,30,66,.04); border-radius: 3px; }
+
+@media (prefers-color-scheme: dark) {
+  body { color: #c7d1e0; background: #1d2125; }
+  .intro, .hint, .card p { color: #8c9bab; }
+  code, .out { background: rgba(255,255,255,.07); }
+  input[type="text"] { background: #22272b; border-color: #38414a; }
+  input[type="text"]:focus { background: #1d2125; border-color: #4c9aff; }
+  button { background: rgba(255,255,255,.08); color: #c7d1e0; }
+  button:hover { background: rgba(255,255,255,.14); }
+  .card { border-color: #38414a; }
+}
+
+fieldset {
+  margin: 0 0 18px;
+  padding: 14px 16px 16px;
+  border: 1px solid #dfe1e6;
+  border-radius: 4px;
+}
+legend { padding: 0 6px; font-weight: 600; }
+fieldset .hint { margin: 0 0 12px; }
+
+.map-head, .map-row {
+  display: grid;
+  grid-template-columns: 1fr 24px 1fr 32px;
+  align-items: center;
+  gap: 8px;
+}
+.map-head {
+  font-size: 12px;
+  color: #6b778c;
+  margin-bottom: 4px;
+}
+.map-row { margin-bottom: 8px; }
+.map-arrow { text-align: center; color: #6b778c; }
+.map-remove {
+  padding: 4px 0;
+  font-size: 16px;
+  line-height: 1;
+  background: none;
+  color: #6b778c;
+}
+.map-remove:hover { background: rgba(9,30,66,.08); color: #de350b; }
+.add { margin-top: 4px; }
+input.invalid { border-color: #de350b; background: rgba(222,53,11,.05); }
+
+@media (prefers-color-scheme: dark) {
+  fieldset { border-color: #38414a; }
+  .map-head, .map-arrow, .map-remove { color: #8c9bab; }
+  .map-remove:hover { background: rgba(255,255,255,.1); }
+}
