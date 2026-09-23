@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Jira Tweaks options</title>
+<link rel="stylesheet" href="options.css">
+</head>
+<body>
+<h1>Jira Tweaks</h1>
+<p class="intro">
+  On a client issue, the extension adds a read-only row under <b>Parent</b> linking to the matching
+  ticket on your own board. Matching is by summary: your ticket is titled
+  <code>EXT-4567/Some description</code>, so the client key has to be at the front.
+</p>
+
+<form id="form">
+  <label>
+    <span class="lbl">Your Jira site</span>
+    <input id="internalSite" type="text" placeholder="https://yourco.atlassian.net" spellcheck="false">
+    <span class="hint">The site holding your internal projects. One site for all mappings.</span>
+  </label>
+
+  <fieldset>
+    <legend>Project mappings</legend>
+    <p class="hint">
+      One of your projects per client project. The row only appears on issues in a client project
+      listed here.
+    </p>
+    <div class="map-head"><span>Client project</span><span></span><span>Your project</span><span></span></div>
+    <div id="mappings"></div>
+    <button id="add" type="button" class="add">+ Add mapping</button>
+  </fieldset>
+
+  <label>
+    <span class="lbl">Row label</span>
+    <input id="fieldLabel" type="text" placeholder="Internal ticket" spellcheck="false">
+    <span class="hint">Text shown in place of "Parent" on the injected row.</span>
+  </label>
+
+  <div class="actions">
+    <button id="save" type="submit" class="primary">Save</button>
+    <span id="status" class="status" role="status"></span>
+  </div>
+</form>
+
+<section id="grant" class="card" hidden>
+  <h2>Site access needed</h2>
+  <p id="grantText"></p>
+  <button id="grantBtn" type="button">Grant access</button>
+</section>
+
+<section class="card">
+  <h2>Test a lookup</h2>
+  <p>Enter a client issue key to check the mapping and search find the right ticket.</p>
+  <div class="row">
+    <input id="testKey" type="text" placeholder="EXT-4567" spellcheck="false">
+    <button id="testBtn" type="button">Test</button>
+  </div>
+  <pre id="testOut" class="out" hidden></pre>
+</section>
+
+<script src="settings.js"></script>
+<script src="options.js"></script>
+</body>
+</html>
